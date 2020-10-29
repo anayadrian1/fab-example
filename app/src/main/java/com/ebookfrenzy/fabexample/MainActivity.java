@@ -1,6 +1,7 @@
 package com.ebookfrenzy.fabexample;
 
 import android.os.Bundle;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,13 +38,22 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
 
-    FloatingActionButton fab = findViewById(R.id.fab);
+    final View.OnClickListener undoOnClickListener = new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        listItems.remove(listItems.size() - 1);
+        adapter.notifyDataSetChanged();
+        Snackbar.make(view, "Item removed", Snackbar.LENGTH_LONG)
+            .setAction("Action", null).show();
+      }
+    };
+    final FloatingActionButton fab = findViewById(R.id.fab);
     fab.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         addListItem();
         Snackbar.make(view, "Item added to list", Snackbar.LENGTH_LONG)
-            .setAction("Undo", null).show();
+            .setAction("Undo", undoOnClickListener).show();
       }
     });
   }
@@ -73,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
     if (id == R.id.action_settings) {
       return true;
     }
-
     return super.onOptionsItemSelected(item);
   }
 }
